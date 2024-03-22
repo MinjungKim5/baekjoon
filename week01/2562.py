@@ -37,4 +37,4 @@ for i in range(9):
 maxNum = max(numList)
 index = numList.index(maxNum)
 print(maxNum)
-print(index)
+print(index+1)
