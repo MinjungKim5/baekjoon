@@ -1,6 +1,5 @@
 ## https://www.acmicpc.net/problem/1978
-
-# 소수 찾기
+## 소수 찾기
 
 # 문제
 # 주어진 수 N개 중에서 소수가 몇 개인지 찾아서 출력하는 프로그램을 작성하시오.
@@ -22,6 +21,8 @@ primePool = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
 
 def checkPrime(ipryuk):
     nums = ipryuk.split(" ")
+    # print(type(nums))
+    # print(nums)
     primes = 0
     for num in nums:
         num = int(num)
@@ -30,18 +31,17 @@ def checkPrime(ipryuk):
         elif num < 40:
             continue
         else:
-            i = 0
             check = True
-            while primePool[i]*primePool[i] < num:
+            for i in range(11):
+                if primePool[i]*primePool[i] > num:
+                    break
                 if num % primePool[i] == 0:
                     check = False
                     break
-                i += 1
-
             if check == True:
                 primes += 1
     return primes
 
-input()
+lenth = int(input())
 result = checkPrime(input())
 print(result)
