@@ -42,34 +42,39 @@ for i in range(m_of_edge):
     vertex_from = int(edge[0]) - 1
     vertex_to = int(edge[1]) - 1
     adj_list[vertex_from].append(vertex_to)
+    adj_list[vertex_to].append(vertex_from)
 
-print(adj_list)
+# print(adj_list)
 
 def dfs(adj_list):
     stack = [start]
     visited_list_dfs = []
     while stack:
         current_dfs = stack.pop(-1)
+        if current_dfs in visited_list_dfs: continue
         print(current_dfs + 1, end=" ")
         visited_list_dfs.append(current_dfs)
         temp_list = []
         for i in adj_list[current_dfs]:
             if i not in visited_list_dfs:
                 temp_list.append(i)
-        while temp_list:
-            stack.append(temp_list.pop(-1))
+        temp_list.sort(reverse=True)
+        stack.extend(temp_list)
 
 def bfs(adj_list):
     que = [start]
     visited_list_bfs = []
     while que:
         current_bfs = que.pop(0)
-
+        if current_bfs in visited_list_bfs: continue
         print(current_bfs + 1, end=" ")
         visited_list_bfs.append(current_bfs)
+        temp_list = []
         for i in adj_list[current_bfs]:
             if i not in visited_list_bfs:
-                que.append(i)
+                temp_list.append(i)
+        temp_list.sort()
+        que.extend(temp_list)
 
 dfs(adj_list)
 print()
