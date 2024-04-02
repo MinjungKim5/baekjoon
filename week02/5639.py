@@ -43,23 +43,47 @@
 # 98
 # 50
 
-import math
+import sys
+sys.setrecursionlimit(10000)
 
-# inputs = []
-# while True:
-#     try: inputs.append(int(input()))
-#     except: break
-
-inputs = [50, 30, 24, 5, 28, 45, 98, 52, 54, 60, 72, 100]
-
-stack = [math.inf, math.inf]
-
-for i in inputs:
-    while i > stack[-1] and i > stack[-2]: print(stack.pop())
-    stack.append(i)
-
+inputs = []
 while True:
-    popped = stack.pop()
-    if popped == math.inf: break
-    print(popped)
+    try: inputs.append(int(input()))
+    except: break
 
+# inputs = [50, 30, 24, 5, 28, 45, 98, 52, 60]
+
+def travel(current, limit):
+    if current == limit:
+        print(inputs[current])
+        return
+    r_idx = None
+    l_idx = None
+    # 왼쪽 서브트리 있는지 확인
+    if inputs[current + 1] <= inputs[current]: l_idx = current + 1
+    # 오른쪽 서브트리 있는지 확인
+    for i in range(current + 1, limit + 1):
+        if inputs[current] < inputs[i]:
+            r_idx = i
+            break
+    if r_idx == None: travel(l_idx, limit)
+    elif l_idx == None: travel(r_idx, limit)
+    else:
+        travel(l_idx, r_idx - 1)
+        travel(r_idx, limit)
+    print(inputs[current])
+
+length = len(inputs)
+travel(0,length - 1)
+
+
+
+
+# for i in inputs:
+#     while i > stack[-1] and i > stack[-2]: print(stack.pop())
+#     stack.append(i)
+
+# while True:
+#     popped = stack.pop()
+#     if popped == math.inf: break
+#     print(popped)
