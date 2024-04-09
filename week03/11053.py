@@ -18,20 +18,35 @@
 # 예제 출력 1 
 # 4
 
-# 이전 까지 최고 부분수열보다 큰 값이면 업데이트해주는 식으로 짰으나 크다 작다 하는 경우 틀림.
-# 각 값의 시작점에서부터 위 방식으로 구한다음에 그 중에 맥스값을 찾는 방식이어야 할것 같은데
+# 이전 최대값보다 크면 그냥 붙이고 아니면 이분탐색 위치의 수와 교환
+
+
+import bisect
 
 length = int(input())
 num_list = input().split(" ")
 nums = [int(num_list[i]) for i in range(length)]
+# nums.insert(0, 0)
+# dp_table = [0 for _ in range(length + 1)]
+sequence = [nums[0]]
+for i in range(1,length):
+    if nums[i] > sequence[-1]: sequence.append(nums[i])
+    else:
+        location = bisect.bisect_left(sequence,nums[i])
+        sequence[location] = nums[i]
 
-# print(nums)
+print(len(sequence))
 
-def lis(start,end):
-    # if 1: return [nums[0], 1]
-    pre = lis(len-1)
-    if pre[0] < nums[len-1]: return [nums[len-1], pre[1]+1]
-    elif pre[1] == 1 and pre[0] >= nums[len-1]: return[nums[len-1], 1]
-    else: return pre
+# for i in range(1, length+1):
+#     for j in range(i-1,0,-1):
+#         if nums[i] > nums[j]: 
+#             x_low = j
+#             break
+#     for k in range(i-1,0,-1):
+#         if nums[i] <= nums[k]:
+#             x_high = k
+#             break
+#     dp_table[i] = max(dp_table[x_low]+1, dp_table[x_high])
 
-print(lis(length)[1])
+# print(dp_table)
+# print(dp_table[length])
