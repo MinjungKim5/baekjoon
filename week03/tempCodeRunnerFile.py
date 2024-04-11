@@ -1,2 +1,1 @@
-
-# print(dp_table[length])
+nt(high_score)
