@@ -49,33 +49,34 @@ first_input = input().split(" ")
 n_of_boxes = int(first_input[0])
 k_of_rules = int(first_input[1])
 d_of_dotori = int(first_input[2])
-# boxes = [0] * (n_of_boxes + 1)
+boxes = [0] * (n_of_boxes + 1)
 rules = []
 for _ in range(k_of_rules):
     rule = list(map(int, sys.stdin.readline().split(" ")))
     rules.append(rule)
-start = 0
-end = n_of_boxes
-boxnum = math.ceil((start+end)/2)
-while True:
-    dotori = squirrel(rules,boxnum)
-    temp = boxnum
-    if dotori < d_of_dotori:
-        start = boxnum
-    else:
-        end = boxnum
-    boxnum = math.ceil((start+end)/2)
-    if temp == boxnum:
-        print(boxnum-1)
-        break
 
+for rule in rules:
+    for i in range((rule[1]-rule[0])//rule[2]+1):
+        boxes[rule[0]+i*rule[2]] += 1
+j=1
+while(d_of_dotori>0):
+    d_of_dotori -= boxes[j]
+    j+=1
 
+print(j-1)
 
-    # for i in range((rule[1]-rule[0])//rule[2]+1):
-    #     boxes[rule[0]+i*rule[2]] += 1
-# j=1
-# while(d_of_dotori>0):
-#     d_of_dotori -= boxes[j]
-#     j+=1
+# start = 0
+# end = n_of_boxes
+# boxnum = math.ceil((start+end)/2)
+# while True:
+#     dotori = squirrel(rules,boxnum)
+#     temp = boxnum
+#     if dotori < d_of_dotori:
+#         start = boxnum
+#     else:
+#         end = boxnum
+#     boxnum = math.ceil((start+end)/2)
+#     if temp == boxnum:
+#         print(boxnum-1)
+#         break
 
-# print(j-1)
