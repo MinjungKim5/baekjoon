@@ -45,5 +45,7 @@ for (int i = 0; i < k; i++) {
     cout << endl;
 }
 cout << x << ' ' << y;
-
+for (int f = 0; f < k; f++) free(arr[f]);
+free(arr);
+arr = NULL;
 }
