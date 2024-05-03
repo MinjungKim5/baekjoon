@@ -32,12 +32,10 @@
 // 1
 
 #include <iostream>
-#include <vector>
 using namespace std;
 
 static int *flag;
-static int *dflag;
-int find_union(int tank);
+static int find_union(int tank);
 
 int main() {
 
@@ -47,11 +45,11 @@ int q_of_visits;
 
 cin >> n_of_tanks >> m_of_pipes >> q_of_visits;
 
-int *water_quality = (int *) malloc((n_of_tanks+1) * sizeof(int));
+int *water_quality = (int *) calloc((n_of_tanks+1), sizeof(int));
 for (int i = 1; i <= n_of_tanks; i++) {
-    bool input_q;
+    int input_q;
     cin >> input_q;
-    water_quality[i] = (input_q ? 1 : -1);
+    water_quality[i] = (input_q==1 ? 1 : -1);
 }
 
 int *sumres = (int*) calloc((n_of_tanks+1), sizeof(int));
@@ -60,28 +58,13 @@ flag = (int *) malloc((n_of_tanks+1) * sizeof(int));
 for (int i = 0; i <= n_of_tanks; i++) {
     flag[i] = i;
 }
-// dflag = (int *) malloc((n_of_tanks+1) * sizeof(int));
-// for (int i = 0; i <= n_of_tanks; i++) {
-//     dflag[i] = i;
-// }
-
-
-// int **pipes = (int **) malloc(m_of_pipes * sizeof(int*));
-// int p[2] = {0,0};
-// for (int pipe = 0; pipe < m_of_pipes; pipe++) {
-//     pipes[pipe] = p;
-// }
 
 for (int i = 0; i < m_of_pipes; i++) {
     int p1, p2;
     cin >> p1 >> p2;
     if (find_union(p1) != find_union(p2)) {
         flag[find_union(p2)] = flag[p1];
-        // dflag[p1] = p2;
     }
-
-    // pipes[i][0] = p1;
-    // pipes[i][1] = p2;   
 }
 
 for (int i = 1; i <= n_of_tanks; i++) {
@@ -91,7 +74,9 @@ for (int i = 1; i <= n_of_tanks; i++) {
 for (int q = 0; q < q_of_visits; q++) {
     int tank;
     cin >> tank;
-    cout << (sumres[find_union(tank)] > 0);
+    if (sumres[find_union(tank)] > 0) cout << 1 << "\n";
+    else cout << 0 << "\n";
+
 }
 
 free(water_quality);
@@ -102,7 +87,7 @@ return 0;
 }
 
 
-int find_union(int tank) {
+static int find_union(int tank) {
     if (flag[tank] == tank) return tank;
     else {
         flag[tank] = find_union(flag[tank]);

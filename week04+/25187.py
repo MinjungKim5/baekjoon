@@ -9,7 +9,7 @@ for i in range(1, n_of_tanks+1):
     else: water_quality[i] = -1
 
 pipes = [list(map(int, sys.stdin.readline().split(" "))) for _ in range(m_of_pipes)]
-pipes = sorted(pipes)
+# pipes = sorted(pipes)
 flag = [i for i in range(n_of_tanks+1)]
 sumres = [0] * (n_of_tanks + 1)
 
