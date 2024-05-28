@@ -46,6 +46,19 @@ int nogada(int skillset, vector<int> quests) {
     return count;
 }
 
+void combination(int n_of_keys, int depth, int count, int num, set<int> *combi) {
+    if (depth == 2*n_of_keys +1) return;
+
+    if (count == n_of_keys) {
+        (*combi).insert(num);
+        return;
+    }
+    combination(n_of_keys, depth+1, count, num, combi);
+    num += pow(2,depth);
+    count += 1;
+    combination(n_of_keys, depth+1, count, num, combi);
+}
+
 int main() {
 /////////////////////////////////
 int n_of_keys, m_of_quests, k_of_skills;
@@ -60,22 +73,24 @@ for(int m = 0; m < m_of_quests; m++) {
     }
 }
 int maxcount = 0;
-// 2n 가지 스킬들 중에서 n개 골라 스킬셋 세팅
+
+
 set<int> combi;
-for (int i = 0; i < pow(2, 2*n_of_keys); i++) {
-    int kcount = 0;
-    int remain = i;
-    for (int j = 0; j < 2*n_of_keys; j++) {
-        kcount += remain%2;
-        remain = remain/2;
-    }
-    if (kcount == n_of_keys) combi.insert(i);
-};
+combination(n_of_keys, 0, 0, 0, &combi);
+// 2n 가지 스킬들 중에서 n개 골라 스킬셋 세팅
+// for (int i = 0; i < pow(2, 2*n_of_keys); i++) {
+//     int kcount = 0;
+//     int remain = i;
+//     for (int j = 0; j < 2*n_of_keys; j++) {
+//         kcount += remain%2;
+//         remain = remain/2;
+//     }
+//     if (kcount == n_of_keys) combi.insert(i);
+// };
 
-
-set<int>::iterator set;
-for (set = combi.begin(); set != combi.end(); set++) {
-    int res = nogada(*set, quests);
+set<int>::iterator setitr;
+for (setitr = combi.begin(); setitr != combi.end(); setitr++) {
+    int res = nogada(*setitr, quests);
     if (res > maxcount) maxcount = res;
 }
 
