@@ -28,6 +28,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <queue>
 using namespace std;
 
 int main() {
@@ -44,35 +45,82 @@ for (int i = 0; i < vertical; i++) {
 }
 // cout << strmap;
 
+vector<bool> lands(nodes, 0);
+vector<vector<int>> adjlist(nodes);
 for (int i = 0; i < nodes; i++) {
+    if (strmap[i] == 'L') {
+        lands[i] = 1;
+    }
+    else continue;
     int left = i+1;
     int down = i+horizontal;
     if ((left%horizontal != 0) && (strmap[left] == 'L')) {
-        map[i][left] = 1;
-        map[left][i] = 1;
+        adjlist[i].push_back(left);
+        adjlist[left].push_back(i);
     }
     if ((down < nodes) && (strmap[down] == 'L')) {
-        map[i][down] = 1;
-        map[down][i] = 1;
+        adjlist[i].push_back(down);
+        adjlist[down].push_back(i);
     }
 }
 
-for (int j = 0; j < nodes; j++) {
-    for (int i = 0; i < nodes; i++) {
-        for (int k = 0; k < nodes; k++) {
-            if (map[i][k] > map[i][j] + map[j][k]) map[i][k] = map[i][j] + map[j][k];
-        }
-    }
-}
+// bfs
 
 int maxval = 0;
+
 for (int i = 0; i < nodes; i++) {
-    for (int j = 0; j < nodes; j++) {
-        if (map[i][j] == 50000) continue;
-        if (map[i][j] > maxval) maxval = map[i][j];
+    if (lands[i] == 0) continue; // 물이면 스킵
+    if (adjlist[i].empty()) continue;
+    // 육지면 bfs 시작
+    queue<int> que;
+    vector<int> count(nodes, 0);
+    for (int j = 0; j < adjlist[i].size(); j++) {
+        que.push(adjlist[i][j]);
+        count[adjlist[i][j]] = 1;
     }
+    count[i] = 1;
+
+    int lastland;
+    int result;
+    while (!que.empty())
+    {
+        lastland = que.front();
+        result = count[lastland];
+        que.pop();
+        for (int j = 0; j < adjlist[lastland].size(); j++) {
+            int candidate = adjlist[lastland][j];
+            if (count[candidate] == 0) {
+                que.push(candidate);
+                count[candidate] = count[lastland] +1;
+            }
+        }
+    }
+    /*
+    // lastland 기준으로 다시한번 bfs
+    lands[lastland] = 0;
+    for (int i = 0; i < nodes; i++) count[i] = 0;
+    for (int j = 0; j < adjlist[i].size(); j++) {
+        que.push(adjlist[lastland][j]);
+        count[adjlist[lastland][j]] = 1;
+    }
+    while (!que.empty())
+    {
+        lastland = que.front();
+        result = count[lastland];
+        lands[lastland] = 0;
+        que.pop();
+        for (int j = 0; j < adjlist[lastland].size(); j++) {
+            int candidate = adjlist[lastland][j];
+            if (count[candidate] == 0) {
+                que.push(candidate);
+                count[candidate] = count[lastland] +1;
+            }
+        }
+    }
+    */
+    if (maxval < result) maxval = result;
 }
 
-cout << maxval-1;
+cout << maxval;
 ////////////////////////////////////////////////////////////
 return 0;}
