@@ -40,36 +40,32 @@ import sys
 import queue
 
 n_of_nations, e_of_edges = map(int, sys.stdin.readline().split(" "))
-flags = [n for n in range(n_of_nations)]
-unions = [([n]) for n in range(n_of_nations)]
-def set_union(a, b):
-    if a > b: a, b = b, a
-    ruler_a = flags[a]
-    ruler_b = flags[b]
-    if ruler_a == ruler_b: return
-    while len(unions[ruler_b]) != 0:
-        buma = unions[ruler_b].pop(0)
-        flags[buma] = ruler_a
-        unions[ruler_a].append(buma)
-    return
-
+flags = [-1 for n in range(n_of_nations+1)]
+flags[0] = 0
+def find_union(a) :
+    if flags[a] < 0: return a
+    flags[a] = find_union(flags[a])
+    return flags[a]
+    
 for _ in range(e_of_edges):
     a, b = map(int, sys.stdin.readline().split(" "))
-    set_union(a-1, b-1)
-
-kings = []
-for n in range(n_of_nations):
-    if flags[n] == n: kings.append(n)
+    if a > b: a, b = b, a
+    ruler_a = find_union(a)
+    ruler_b = find_union(b)
+    if(ruler_a == ruler_b) : continue
+    flags[ruler_a] += flags[ruler_b]
+    flags[ruler_b] = ruler_a
 
 sejin, hansol, chance = map(int, sys.stdin.readline().split(" "))
-kings.remove(flags[sejin-1])
-kings.remove(flags[hansol-1])
-power = len(unions[flags[sejin-1]])
+power = -flags[find_union(sejin)]
+flags[find_union(hansol)] = 0
 
-powers = []
-while (len(kings) != 0): powers.append(len(unions[kings.pop()]))
-powers = sorted(powers, reverse=True)
-
-for c in range(chance): power += powers[c]
+kings = []
+for i in range(n_of_nations+1):
+    if flags[i] < 0: kings.append(flags[i])
+kings = sorted(kings)
+for c in range(chance):
+    if(len(kings) == 0): break
+    power -= kings[c]
 
 print(power)
