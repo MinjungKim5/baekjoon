@@ -60,13 +60,13 @@ using namespace std;
 
 static int count = 0;
 
-bool check(int curr, vector<vector<int>> links, vector<bool> *visited) {
-    if (links[curr].empty())  return 0;
+bool check(int curr, vector<vector<int>> *links, vector<bool> *visited) {
+    if ((*links)[curr].empty())  return 0;
     (*visited)[curr] = 1;
     bool res = 1;
-    for (int l = 0; l < links[curr].size(); l++) {
-        if ((*visited)[links[curr][l]]) continue;
-        res = res & check(links[curr][l], links, visited);
+    for (int l = 0; l < (*links)[curr].size(); l++) {
+        if ((*visited)[(*links)[curr][l]]) continue;
+        res = res & check((*links)[curr][l], links, visited);
     }
     
     if (!res) count++;
@@ -89,7 +89,7 @@ for (int n = 1; n < n_of_nodes; n++) {
     links[link].push_back(node);
 }
 
-check(1, links, &visited);
+check(1, &links, &visited);
 cout << count;
 
 // visit.push(1);
