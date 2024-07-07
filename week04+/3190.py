@@ -39,39 +39,54 @@
 # 예제 출력 1 
 # 9
 
+import math
 
-def game(map, orders):
+def cordx(angle): return int(round(math.cos(angle)))
+def cordy(angle): return int(round(math.sin(angle)))
+
+def game(gmap, orders:list):
     angle = 0
     length = 1
-    time = 1
+    time = 0
     x, y = 1 , 1
 
     while(True):
-        if (len(orders)>0 | int(orders[0][0])==time):
-            
+        time +=1
+        # 머리 늘리기
+        x += cordx(angle)
+        y += cordy(angle)
 
-    print(time)
-    return
-    
+        # 머리 위치에 벽이면 게임오버
+        if (gmap[y][x] >= time-length): print(time);return
+        else:
+            if (gmap[y][x] == -2): length +=1 # 사과 먹으면 몸길이 증가
+            gmap[y][x] = time
+        
+        # 머리 회전
+        if(len(orders) and int(orders[0][0])==time):
+            order = orders.pop(0)
+            if (order[1] == "L"): angle -= math.pi/2
+            else: angle += math.pi/2
+
 
 n_of_map = int(input())
 k_of_apple = int(input())
 
-map = [[0 for _ in range(n_of_map+2)] for _ in range(n_of_map+2)]
+gmap = [[-1 for _ in range(n_of_map+2)] for _ in range(n_of_map+2)]
 for v in range(n_of_map+2):
     if v==0 or v == (n_of_map+1):
-        for h in range(n_of_map+1): map[v][h] = 20000
+        for h in range(n_of_map+1): gmap[v][h] = 20000
     else:
-        map[v][0] = 20000
-        map[v][n_of_map+1] = 20000
+        gmap[v][0] = 20000
+        gmap[v][n_of_map+1] = 20000
 
 for _ in range(k_of_apple):
     y,x = map(int, input().split(" "))
-    map[y][x] = -1
+    gmap[y][x] = -2
 
 n_of_order = int(input())
 orders = []
 for _ in range(n_of_order):
     orders.append(input().strip().split(" "))
 
-game(map, orders)
+game(gmap, orders)

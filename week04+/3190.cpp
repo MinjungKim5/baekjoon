@@ -52,22 +52,28 @@ int cordy(int angle) {return (int) round(sin(angle));}
 void game(vector<vector<int>> map, vector<pair<int, char>> orders) {
     int angle = 0;
     int length = 1;
-    int time = 1;
+    int time = 0;
     int x = 1, y = 1;
     while (true) {
+        time += 1;
+
+        // 머리 늘리기
+        x += cordx(angle); 
+        y += cordy(angle);
+
+        // 머리 위치에 벽이나 꼬리면 게임오버
+        if (map[y][x] > time - length) {cout << time; return;}
+        else {
+            if (map[y][x] == -2) length++; // 사과 먹기
+            map[y][x] = time;
+        }
+        
+        // 머리 회전
         if (!orders.empty() && orders[0].first==time) {
             if (orders[0].second == 'L') angle -= 90;
             else angle += 90;
             orders.erase(orders.begin());
         }
-        x += cordx(angle); 
-        y += cordy(angle);
-        if (map[y][x] > (time - length+1)) {cout << time; return;}
-        else {
-            if (map[y][x] == -1) length++;
-            map[y][x] = time;
-        }
-        time++;
     }
 }
 
@@ -77,7 +83,7 @@ int n_of_map, k_of_apple;
 cin >> n_of_map >> k_of_apple;
 
 // 맵 만들기
-vector<vector<int>> map(n_of_map+2, vector<int>(n_of_map+2,0));
+vector<vector<int>> map(n_of_map+2, vector<int>(n_of_map+2,-1));
 for (int v = 0; v < n_of_map+2; v++) {
     if (v == 0 || v == (n_of_map+1)) {
         for (int h = 0; h < n_of_map+2; h++) map[v][h] = 30000;
@@ -87,7 +93,7 @@ for (int v = 0; v < n_of_map+2; v++) {
 for (int k = 0; k < k_of_apple; k++) {
     int y, x;
     cin >> y >> x;
-    map[y][x] = -1;
+    map[y][x] = -2;
 
 }
 
