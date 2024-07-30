@@ -25,7 +25,7 @@ public class Q25206 {
 
         for (int i = 0; i < 20; i++) {
             StringTokenizer input = new StringTokenizer(br.readLine());
-            String gwa = input.nextToken();
+            input.nextToken();
             Double time = Double.parseDouble(input.nextToken());
             String grade = input.nextToken();
             if (grade.equals("P")) continue;
