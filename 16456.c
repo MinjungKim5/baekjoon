@@ -35,14 +35,15 @@
 #include <stdlib.h>
 int main() {
 int hawaii;scanf("%d", &hawaii);
-int *hawawa1 = (int *) calloc(hawaii+1, sizeof(int));
-int *hawawa2 = (int *) calloc(hawaii+1, sizeof(int));
-hawawa1[1] = 1;
-for (int i = 2; i <= hawaii; i++) {
-    hawawa1[i] = (hawawa1[i-1] + hawawa2[i-1])%1000000009;
-    hawawa2[i] = hawawa1[i-2];
+if (hawaii < 3) {printf("1"); return 0;}
+if (hawaii == 3) {printf("2"); return 0;}
+int *hawawa = (int *) calloc(hawaii+1, sizeof(int));
+hawawa[1] = 1;
+hawawa[2] = 1;
+hawawa[3] = 2;
+for (int i = 4; i <= hawaii; i++) {
+    hawawa[i] = (hawawa[i-1] + hawawa[i-3])%1000000009;
 }
-printf("%d", (hawawa1[hawaii]+hawawa2[hawaii])%1000000009);
-free(hawawa1);
-free(hawawa2);
+printf("%d", (hawawa[hawaii])%1000000009);
+free(hawawa);
 return 0;}
