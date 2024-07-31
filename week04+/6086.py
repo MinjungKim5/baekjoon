@@ -1,32 +1,53 @@
 # https://www.acmicpc.net/problem/6086
 # 최대 유량
 
-# 컨셉: A에서 시작해서 자기한테 연결된 링크 중 Z로 가는 링크와, 그게 아니면 서브노드 탐색 리턴값 을 합해준다.
 import sys
-nOfPipes = int(input())
+n_of_pipes = int(input())
 
-adjlist = [[] for _ in range(100)]
-visited = [False] * 100
-visited[0] = True
+adjmatrix = [[0]*52 for _ in range(52)]
+visited = [False] * 52
 
-def search(a):
-    sum=0
-    willVisit = adjlist[a]
-    while(len(willVisit) != 0):
-        row = willVisit.pop(0)
-        if row[0] == 25: sum += row[1]
-        elif visited[row[0]] == True: continue
-        else:
-            visited[row[0]] = True
-            sum += min(search(row[0]), row[1])
-    return sum
+def ord_alpha(char):
+    convert = ord(char)
+    if convert < 91: return convert-65
+    else: return convert-71
 
-for _ in range(nOfPipes):
+for _ in range(n_of_pipes): #인접행렬 작성
     instr = sys.stdin.readline().split(" ")
-    a=ord(instr[0])-65
-    b=ord(instr[1])-65
+    a=ord_alpha(instr[0])
+    b=ord_alpha(instr[1])
     c=int(instr[2])
-    adjlist[a].append([b,c])
-    adjlist[b].append([a,c])
+    adjmatrix[a][b] += c
+    adjmatrix[b][a] += c
 
-print(search(0))
+
+def priority_BFS(a, flow):
+    if adjmatrix[a][25] > 0:
+        flow = min(flow, adjmatrix[a][25])
+        adjmatrix[a][25] -= flow
+        adjmatrix[25][a] -= flow
+        return flow
+    else:
+        nodelist = []
+        for idx in range(52): # 연결된 노드들 찾아서 리스트 인
+            if visited[idx] == True: continue
+            if adjmatrix[a][idx] > 0:
+                nodelist.append([adjmatrix[a][idx], idx])
+        nodelist.sort(reverse=True)
+        for node in nodelist:
+            visited[node[1]] = True
+            minflow = min(flow, priority_BFS(node[1], min(flow, node[0])))
+            if minflow == 0: continue
+            adjmatrix[a][node[1]] -= minflow
+            adjmatrix[node[1]][a] -= minflow
+            return minflow
+        return 0
+
+sum = 0
+while True:
+    # 가중치 높은 재귀 다익스트라
+    visited = [False] * 52
+    visited[0] = True
+    flow = priority_BFS(0,2000000000)
+    sum += flow
+    if flow == 0 or flow == 2000000000: print(sum); exit()
