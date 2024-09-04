@@ -77,6 +77,6 @@ while (true){
     }
     cout << "<" << pw << "> is ";
     if (noVowel | streakError) cout << "not ";
-    cout << "acceptable\n";
+    cout << "acceptable.\n";
 }
 }
